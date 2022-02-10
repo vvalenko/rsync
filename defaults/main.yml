@@ -1,0 +1,55 @@
+---
+# defaults file for rsync
+
+#######################################
+# Configuration server
+rsync_server_configuration: false
+
+# Configuration global to server
+rsync_server_configuration_global:
+  timeout: 600
+  'max connections': 10
+  'log file': /var/log/rsyncd.log
+
+# Configuration directory to server
+rsync_server_configuration_list:
+  - name: rsync2
+    path: /tmp
+    comment: Template directory
+    readonly: false
+    uid: root
+    gid: root
+    custom_params:      # Any params
+      'write only': false
+  - name: log
+    path: /var/log
+    comment: Logs directory
+    readonly: true
+    uid: root
+    gid: root
+    custom_params:      # Any params
+      timeout: 60
+
+########################################
+# Configuration clients
+rsync_client_configuration: false
+
+# Configuration BASH script and set crontab
+rsync_client_configuration_list:
+  - path: /tmp/rsync.sh
+    cron: "0 10 15 * *"
+    cron_user: root
+    params:
+      - from: "localhost:rsync/"
+        to: /tmp/rsync
+        options: "--timeout=10 -azrupHl"
+      - from: "localhost:rsync2/"
+        to: /tmp/rsync2
+        options: "--timeout=10 -azrupHl"
+  - path: /tmp/rsync2.sh
+    cron: "0 15 10 * *"
+    cron_user: root
+    params:
+      - from: /tmp/rsync
+        to: "10.156.215.2:rsync_arc/"
+        options: "--timeout=10 -azrupHl"

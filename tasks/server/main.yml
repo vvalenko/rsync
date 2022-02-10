@@ -1,0 +1,8 @@
+---
+
+- name: Configure Server | Generate config
+  template:
+    dest: /etc/rsyncd.conf
+    src: rsyncd.conf.j2
+    mode: 0644
+  notify: start and enable service

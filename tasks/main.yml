@@ -1,0 +1,16 @@
+---
+# tasks file for rsync
+
+# Install rsync as default
+- name: Main | Install rsync
+  import_tasks: install_rsync.yml
+
+# Configuration as a server
+- name: Main | Configuration as a server
+  when: rsync_server_configuration
+  import_tasks: server/main.yml
+
+# Configuration as a client. Generate BASH-script and send to crontab
+- name: Main | Configuration as a client (bash)
+  when: rsync_client_configuration
+  import_tasks: client/main.yml

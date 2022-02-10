@@ -1,0 +1,8 @@
+---
+
+- name: Install rsync | Install
+  apt:
+    name: "{{ item }}"
+    update_cache: true
+  with_items:
+    - rsync

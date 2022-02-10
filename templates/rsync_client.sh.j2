@@ -1,0 +1,5 @@
+#!/bin/bash
+
+{% for rlist in rsync_client_params %}
+rsync {{ rlist.options }} {{ rlist.from }} {{ rlist.to }}
+{% endfor %}

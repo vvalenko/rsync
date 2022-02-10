@@ -1,0 +1,17 @@
+---
+
+- name: Configure Client | Install flock (util-linux)
+  apt:
+    name: "{{ item }}"
+    update_cache: true
+  with_items:
+    - util-linux
+
+- name: Configure Client | Generate files
+  vars:
+    rsync_client_cron: "{{ item.cron }}"
+    rsync_client_cron_user: "{{ item.cron_user }}"
+    rsync_client_filename: "{{ item.path }}"
+    rsync_client_params: "{{ item.params }}"
+  include_tasks: generate_scripts.yml
+  with_items: "{{ rsync_client_configuration_list }}"

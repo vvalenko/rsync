@@ -1,0 +1,18 @@
+[global]
+{% for key,value in rsync_server_configuration_global.items() %}
+{{key}} = {{value}}
+{% endfor %}
+
+
+{% for rlist in rsync_server_configuration_list %}
+[{{ rlist.name }}]
+path = {{ rlist.path }}
+comment = {{ rlist.comment | default(rlist.path) }}
+read only = {{ rlist.readonly | default(true) | ternary('true', 'false' ) }}
+uid = {{ rlist.uid | default('nobody') }}
+gid = {{ rlist.gid | default('nobody') }}
+{% for key,value in rlist.custom_params.items() %}
+{{key}} = {{value}}
+{% endfor %}
+
+{% endfor %}

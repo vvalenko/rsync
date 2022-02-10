@@ -1,0 +1,18 @@
+---
+
+- name: Configure Client | Generate bash files
+  template:
+    dest: "{{ rsync_client_filename }}"
+    src: rsync_client.sh.j2
+    mode: 0744
+
+- name: Configure Client | Set crontab
+  ansible.builtin.cron:
+    name: "{{ rsync_client_filename }}"
+    user: "{{ rsync_client_cron_user }}"
+    minute: "{{ rsync_client_cron.split(' ')[0] | default('*') }}"
+    hour: "{{ rsync_client_cron.split(' ')[1] | default('*') }}"
+    day: "{{ rsync_client_cron.split(' ')[2] | default('*') }}"
+    month: "{{ rsync_client_cron.split(' ')[3] | default('*') }}"
+    weekday: "{{ rsync_client_cron.split(' ')[4] | default('*') }}"
+    job: "flock /tmp/{{ rsync_client_filename.split('/')[-1] }}.lock {{ rsync_client_filename }} >/dev/null 2>&1"
